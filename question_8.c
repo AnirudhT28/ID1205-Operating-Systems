@@ -79,7 +79,7 @@ int main(int argcount, char *arglist[]) {
             perror("Child 1 write failed");
         }
 
-        close(pipe_1_fd[WRITE_END]);
+        close(pipe_1_fd[WRITE_END]); // close write end and free child memory
         free(array);
         exit(EXIT_SUCCESS);
     }
@@ -107,7 +107,7 @@ int main(int argcount, char *arglist[]) {
             perror("Child 2 write failed");
         }
 
-        close(pipe_2_fd[WRITE_END]);
+        close(pipe_2_fd[WRITE_END]); //close read end and free child memory
         free(array);
         exit(EXIT_SUCCESS);
     }
@@ -135,23 +135,20 @@ int main(int argcount, char *arglist[]) {
     close(pipe_1_fd[READ_END]); // close read ends 
     close(pipe_2_fd[READ_END]);
 
-    double total_sum = child1_sum + child2_sum;
+    double total_sum = child1_sum + child2_sum; // sum from both child processes
    
     clock_gettime(CLOCK_MONOTONIC, &end_time); // stop timer after all processes and computation ends 
 
-    // Calculate and print the final sum
+    
    
 
-    printf("\n--- Results ---\n");
     printf("Sum from Child 1:  %f\n", child1_sum);
     printf("Sum from Child 2: %f\n", child2_sum);
-    printf("Total sum (parent): %f\n", total_sum);
+    printf("Total sum (parent): %f\n", total_sum); 
 
-    // Calculate elapsed time in seconds
-    double time_elapsed = (end_time.tv_sec - start_time.tv_sec) +
+    double time_elapsed = (end_time.tv_sec - start_time.tv_sec) + // calculate time in seconds
                           (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
 
-    printf("------------------------------------------\n");
     printf("Total time elapsed: %f seconds\n", time_elapsed);
 
   
