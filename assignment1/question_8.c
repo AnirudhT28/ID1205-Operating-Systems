@@ -1,13 +1,12 @@
 #include <stdio.h>      
 #include <stdlib.h>     
-#include <unistd.h>     
-#include <time.h>       
+#include <unistd.h>          
 #include <sys/wait.h>   
 #include <sys/types.h>
 #include <math.h>
 #include <string.h>
-
-#define _POSIX_C_SOURCE 199309L 
+#define _POSIX_C_SOURCE 199309L
+#include <time.h>
 #define READ_END 0
 #define WRITE_END 1
 
