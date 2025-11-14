@@ -143,9 +143,9 @@ int main(int argcount, char *arglist[]) {
    
 
     printf("\n--- Results ---\n");
-    printf("Sum from Child 1 (first half):  %f\n", child1_sum);
-    printf("Sum from Child 2 (second half): %f\n", child2_sum);
-    printf("Total sum calculated by Parent: %f\n", total_sum);
+    printf("Sum from Child 1:  %f\n", child1_sum);
+    printf("Sum from Child 2: %f\n", child2_sum);
+    printf("Total sum (parent): %f\n", total_sum);
 
     // Calculate elapsed time in seconds
     double time_elapsed = (end_time.tv_sec - start_time.tv_sec) +
@@ -154,17 +154,8 @@ int main(int argcount, char *arglist[]) {
     printf("------------------------------------------\n");
     printf("Total time elapsed: %f seconds\n", time_elapsed);
 
-    // --- End of added logic ---
+  
 
-    // 3. This is the corrected print statement
-    /* // This loop is commented out as it's not practical for large N
-    printf("\nArray elements (for debugging):\n");
-    for (int i = 0; i < N; i++) {
-        printf("%f ", array[i]);
-    }
-    printf("\n");
-    */
-
-    free(array); // Clean up parent's memory
+    free(array); //free parent memory
     return 0;
 }
