@@ -35,7 +35,7 @@ int main(int argcount, char *arglist[]) {
          array[i] = (double)rand() / (double)RAND_MAX; // RAND_MAX is always > rand, cannot be 0 aswell
      }
 
-    // --- Start of added fork, pipe, and timing logic ---
+
 
     int pipe_1_fd[2]; // create pipes for each child process
     if (pipe(pipe_1_fd) == -1) {
@@ -63,15 +63,15 @@ int main(int argcount, char *arglist[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (pid1 == 0) {
-        // --- Child 1 Process (First Half) ---
+    if (pid1 == 0) { // child 1
+    
         close(pipe_1_fd[READ_END]);
         close(pipe_2_fd[READ_END]);
         close(pipe_2_fd[WRITE_END]);
 
         double sum1 = 0.0;
-        int end_index = N / 2;
-        for (int i = 0; i < end_index; i++) {
+        int end_index = N / 2; // index at half of the array
+        for (int i = 0; i < end_index; i++) {  // iterate and summate all values
             sum1 += array[i];
         }
 
@@ -91,14 +91,14 @@ int main(int argcount, char *arglist[]) {
         exit(EXIT_FAILURE);
     }
 
-    if (pid2 == 0) {
-        // --- Child 2 Process (Second Half) ---
+    if (pid2 == 0) { // child 2
+    
         close(pipe_2_fd[READ_END]);
         close(pipe_1_fd[READ_END]);
         close(pipe_1_fd[WRITE_END]);
 
         double sum2 = 0.0;
-        int start_index = N / 2;
+        int start_index = N / 2;   
         for (int i = start_index; i < N; i++) {
             sum2 += array[i];
         }
@@ -112,7 +112,7 @@ int main(int argcount, char *arglist[]) {
         exit(EXIT_SUCCESS);
     }
 
-    // --- Parent Process: Wait and Aggregate ---
+    
 
     // Parent closes *all* write ends of the pipes
     close(pipe_1_fd[WRITE_END]);
@@ -123,7 +123,7 @@ int main(int argcount, char *arglist[]) {
     waitpid(pid2, NULL, 0);
 
     // Read the results from the pipes
-    double child1_sum, child2_sum;
+    double child1_sum, child2_sum; // read from processes
     if (read(pipe_1_fd[READ_END], &child1_sum, sizeof(child1_sum)) == -1) {
         perror("Parent read from child 1 failed");
     }
@@ -131,15 +131,16 @@ int main(int argcount, char *arglist[]) {
         perror("Parent read from child 2 failed");
     }
 
-    // Close the read ends
-    close(pipe_1_fd[READ_END]);
+  
+    close(pipe_1_fd[READ_END]); // close read ends 
     close(pipe_2_fd[READ_END]);
 
-    // Stop the timer *after* results are aggregated
-    clock_gettime(CLOCK_MONOTONIC, &end_time);
+    double total_sum = child1_sum + child2_sum;
+   
+    clock_gettime(CLOCK_MONOTONIC, &end_time); // stop timer after all processes and computation ends 
 
     // Calculate and print the final sum
-    double total_sum = child1_sum + child2_sum;
+   
 
     printf("\n--- Results ---\n");
     printf("Sum from Child 1 (first half):  %f\n", child1_sum);
