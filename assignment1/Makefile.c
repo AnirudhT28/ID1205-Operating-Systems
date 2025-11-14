@@ -1,5 +1,7 @@
 CC = gcc
-
+	
+LDFLAGS = -lm -lrt
+	
 CFLAGS = -Wall -Wextra -std=c11 -g
 
 SRCS = question_8.c
