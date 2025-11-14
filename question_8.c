@@ -19,7 +19,7 @@ int main(int argcount, char *arglist[]) {
     
     int N = atoi(arglist[1]); 
     if (N <= 0) {
-        fprintf(stderr, "Error: N must be a positive integer.\n");
+        fprintf(stderr, "Error: N must be a positive integer.\n"); // ensure its positive value
         exit(EXIT_FAILURE);
     }
     
@@ -49,15 +49,13 @@ int main(int argcount, char *arglist[]) {
         exit(EXIT_FAILURE);
     }
 
-    // Declare variables for PIDs and timing
-    pid_t pid1, pid2;
+    pid_t pid1, pid2; // declare variables and timespec 
     struct timespec start_time, end_time;
 
-     // Start the timer *just before* process creation
-    clock_gettime(CLOCK_MONOTONIC, &start_time);
+    clock_gettime(CLOCK_MONOTONIC, &start_time); // start timer before fork proccesses 
 
-    // Fork the first child
-    pid1 = fork();
+   
+    pid1 = fork(); // fork first child
     if (pid1 < 0) {
         perror("fork1 failed");
         exit(EXIT_FAILURE);
@@ -83,9 +81,8 @@ int main(int argcount, char *arglist[]) {
         free(array);
         exit(EXIT_SUCCESS);
     }
-
-    // Fork the second child
-    pid2 = fork();
+    
+    pid2 = fork(); // fork second child
     if (pid2 < 0) {
         perror("fork2 failed");
         exit(EXIT_FAILURE);
@@ -150,9 +147,6 @@ int main(int argcount, char *arglist[]) {
                           (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
 
     printf("Total time elapsed: %f seconds\n", time_elapsed);
-
-  
-
     free(array); //free parent memory
     return 0;
 }
