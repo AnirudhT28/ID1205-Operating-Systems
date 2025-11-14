@@ -5,8 +5,9 @@
 #include <sys/wait.h>   
 #include <sys/types.h>
 #include <math.h>
-#include <string.h>     
+#include <string.h>
 
+#define _POSIX_C_SOURCE 199309L 
 #define READ_END 0
 #define WRITE_END 1
 
