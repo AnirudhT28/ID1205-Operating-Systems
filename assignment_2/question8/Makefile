@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -Wall -Werror -O2
 LDFLAGS = -pthread
-TARGET = stack_app
-SOURCE = stack_app.c
+TARGET = pthread_stack
+SOURCE = pthread_stack.c
 
 all: $(TARGET)
 
