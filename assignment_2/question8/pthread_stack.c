@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdint.h> // Required for intptr_t
+#include <stdint.h> 
 
 int num_threads = 0;
 pthread_mutex_t stack_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -13,9 +13,8 @@ typedef struct node {
     struct node *next;
 } Node;
 
-Node *top = NULL; // Initialize top to NULL
+Node *top = NULL; 
 
-/* Helper Functions (Added these to fix implicit declaration errors) */
 void print_remaining_nodes() {
     Node *current = top;
     if (current == NULL) {
@@ -36,10 +35,9 @@ void cleanup_stack() {
         free(current);
         current = next_node;
     }
-    top = NULL; // Reset top
+    top = NULL; 
 }
 
-/* Option 1: Mutex Lock */
 void push_mutex() {
     Node *old_node;
     Node *new_node;
@@ -81,7 +79,7 @@ int pop_mutex() {
     return id;
 }
 
-/* Option 2: Compare-and-Swap (CAS) */
+
 void push_cas() {
     Node *old_node;
     Node *new_node;
@@ -92,13 +90,13 @@ void push_cas() {
         return;
     }
 
-    // Assign unique ID atomically
+   
     new_node->node_id = __sync_fetch_and_add(&node_counter, 1);
 
     do {
         old_node = top;
         new_node->next = old_node;
-        // Loop while the CAS operation FAILS
+        
     } while (!__sync_bool_compare_and_swap(&top, old_node, new_node));
 }
 
@@ -110,37 +108,27 @@ int pop_cas() {
     while (1) {
         old_node = top;
         
-        // Check if stack is empty
+       
         if (old_node == NULL) {
             return -1; 
         }
 
         new_node = old_node->next;
 
-        // Try to swap top with next node
+        
         if (__sync_bool_compare_and_swap(&top, old_node, new_node)) {
             id = old_node->node_id;
-            // Note: Freeing memory in CAS is complex (ABA problem). 
-            // For this assignment logic, we free, but in production, 
-            // this requires hazard pointers.
             free(old_node); 
             return id;
         }
-        // If swap failed, loop retries with updated 'top'
     }
 }
 
-/* The thread function */
-// FIXED: Signature must be void *func(void *arg)
+
 void *thread_func(void *arg) {
-    // Cast the void* argument back to int
+  
     int opt = (int)(intptr_t)arg;
     
-    /* NOTE: The prompt code did not pass a unique thread ID (like i), 
-       it only passed the option (0 or 1). So 'my_id' cannot be 
-       determined here without changing main(). 
-       We will print the option instead to satisfy the compiler.
-    */
 
     if (opt == 0) {
         push_mutex();
@@ -156,7 +144,6 @@ void *thread_func(void *arg) {
         push_cas();
     }
 
-    // printf("Thread exit\n"); // Removed my_id printing as it was uninitialized
     pthread_exit(NULL);
 }
 
@@ -174,14 +161,14 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    /* Option 1: Mutex */
+  
     printf("--- Testing Mutex ---\n");
-    node_counter = 0; // Reset counter
+    node_counter = 0; 
     
     for (int i = 0; i < num_threads; i++) {
         pthread_attr_t attr;
         pthread_attr_init(&attr);
-        // Pass 0 as (void*)
+       
         pthread_create(&workers[i], &attr, thread_func, (void *)(intptr_t)0);
     }
 
@@ -193,14 +180,14 @@ int main(int argc, char *argv[]) {
     print_remaining_nodes();
     cleanup_stack();
 
-    /* Option 2: CAS */
+   
     printf("\n--- Testing CAS ---\n");
-    node_counter = 0; // Reset counter for clean test
+    node_counter = 0;
 
     for (int i = 0; i < num_threads; i++) {
         pthread_attr_t attr;
         pthread_attr_init(&attr);
-        // Pass 1 as (void*)
+        
         pthread_create(&workers[i], &attr, thread_func, (void *)(intptr_t)1);
     }
 
