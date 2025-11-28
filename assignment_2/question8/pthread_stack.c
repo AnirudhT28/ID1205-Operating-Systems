@@ -104,7 +104,7 @@ void push_cas() {
 
 int pop_cas() {
     Node *old_node;
-    Node *new_head;
+    Node *new_node;
     int id = -1;
 
     while (1) {
@@ -115,10 +115,10 @@ int pop_cas() {
             return -1; 
         }
 
-        new_head = old_node->next;
+        new_node = old_node->next;
 
         // Try to swap top with next node
-        if (__sync_bool_compare_and_swap(&top, old_node, new_head)) {
+        if (__sync_bool_compare_and_swap(&top, old_node, new_node)) {
             id = old_node->node_id;
             // Note: Freeing memory in CAS is complex (ABA problem). 
             // For this assignment logic, we free, but in production, 
