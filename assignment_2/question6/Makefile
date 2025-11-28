@@ -2,8 +2,8 @@ CC = gcc
 CFLAGS = -Wall -O2
 LDFLAGS = -pthread
 
-TARGET = pthread_sum
-SRC = pthread_sum.c
+TARGET = question_6
+SRC = question_6.c
 
 all: $(TARGET)
 
