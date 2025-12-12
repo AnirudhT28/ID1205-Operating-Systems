@@ -24,15 +24,15 @@ int main(int argc, char** argv) {
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     // Option 1:
-    addr = (char*) mmap(NULL, total_size, PROT_READ | PROT_WRITE, 
-                        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    //addr = (char*) mmap(NULL, total_size, PROT_READ | PROT_WRITE, 
+    //                    MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
 
 
     // Option 2
 
-    // addr = (char*) mmap(NULL, total_size, PROT_READ | PROT_WRITE, 
-    //                     MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
+    addr = (char*) mmap(NULL, total_size, PROT_READ | PROT_WRITE, 
+                         MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB, -1, 0);
 
 
     // Check for failure
