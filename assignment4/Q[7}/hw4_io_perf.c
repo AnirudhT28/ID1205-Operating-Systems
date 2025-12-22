@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
     // @start timing 
     gettimeofday(&start, NULL);
 
-    /* Create writer workers and pass in their portion of list1 */   
+    //Create writer workers and pass in their portion of list1    
     for (int i = 0; i < p_threads; i++) {
         thread_ids[i] = i;
         pthread_create(&workers[i], NULL, writer_thread_func, &thread_ids[i]);
     }
      
-    /* Wait for all writers to finish */ 
+    // Wait for all writers to finish 
     for (int i = 0; i < p_threads; i++) {
         pthread_join(workers[i], NULL);
     }
@@ -134,12 +134,12 @@ int main(int argc, char *argv[])
     // @start timing 
     gettimeofday(&start, NULL);
 
-    /* Create reader workers and pass in their portion of list1 */   
+    // Create reader workers and pass in their portion of list1   
     for (int i = 0; i < p_threads; i++) {
         pthread_create(&workers[i], NULL, reader_thread_func, &thread_ids[i]);
     }
      
-    /* Wait for all reader to finish */ 
+    // Wait for all reader to finish 
     for (int i = 0; i < p_threads; i++) {
         pthread_join(workers[i], NULL);
     }
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
             total_mb, p_threads, elapsed, total_mb / elapsed);
 
 
-    /*free up resources properly */
+    //free up resources properly 
     free(data_buffer);
     free(list1);
     free(list2);
